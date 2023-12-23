@@ -30,7 +30,10 @@
                 <td>@client.Phone</td>
                 <td>@client.Address</td>
                 <td>@client.Description</td>
-                <td> <a href="PhoneClients/View/@client.Id">View</a> </td>
+                @if (User.Identity.IsAuthenticated && User.IsInRole("admin"))
+                {
+                    <td> <a href="PhoneClients/View/@client.Id">View</a> </td>
+                }
             </tr>
         }
     </tbody>

@@ -25,12 +25,15 @@ namespace PhonesMVC.Controllers
         [HttpGet]
         public IActionResult Add()
         {
+            if (!User.Identity.IsAuthenticated) return View("Error");
             return View();
         }
 
         [HttpPost]
         public async Task<IActionResult> Add(AddPhoneClientVM addRequest)
         {
+            if (!User.Identity.IsAuthenticated) return View("Error");
+
             var client = new PhoneClient()
             {
                 Id = Guid.NewGuid(),
@@ -51,6 +54,8 @@ namespace PhonesMVC.Controllers
         [HttpGet]
         public async Task<IActionResult> View(Guid id)
         {
+            if (!User.IsInRole("admin")) return View("Error");
+
             var client = await _context.PhoneClients.FirstOrDefaultAsync(x => x.Id == id);
 
             if (client == null) return View("Error");
@@ -72,6 +77,8 @@ namespace PhonesMVC.Controllers
         [HttpPost]
         public async Task<IActionResult> View(UpdatePhoneClientVM updateClient)
         {
+            if (!User.IsInRole("admin")) return View("Error");
+
             var client = await _context.PhoneClients.FindAsync(updateClient.Id);
 
             if (client == null) return View("Error");
@@ -91,6 +98,8 @@ namespace PhonesMVC.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(UpdatePhoneClientVM updateClient)
         {
+            if (!User.IsInRole("admin")) return View("Error");
+
             var client = await _context.PhoneClients.FindAsync(updateClient.Id);
 
             if (client == null) return View("Error");
